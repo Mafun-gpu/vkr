@@ -14,7 +14,7 @@ export function RegionFilter({
   onSelect,
 }: RegionFilterProps) {
   return (
-    <section className="card">
+    <section className="card section">
       <h2>Region</h2>
       <select
         className="input"

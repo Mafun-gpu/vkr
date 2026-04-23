@@ -58,7 +58,7 @@ export function DashboardPage() {
 
   return (
     <main className="container">
-      <h1>IT Market Dashboard (MVP)</h1>
+      <h1 className="page-title">IT Market Dashboard</h1>
       <RegionFilter
         regions={regions}
         selectedRegionId={selectedRegionId}
@@ -67,7 +67,7 @@ export function DashboardPage() {
       />
 
       {error && <p className="error">Error: {error}</p>}
-      {(loadingRegions || loadingDashboard) && <p>Loading data...</p>}
+      {(loadingRegions || loadingDashboard) && <p className="muted">Loading data...</p>}
 
       {dashboard && !loadingDashboard && (
         <>

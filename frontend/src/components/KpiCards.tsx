@@ -1,19 +1,29 @@
 import type { KpiMetrics } from '../types/dashboard';
+import { formatNumber, formatPercent, formatRub } from '../app/format';
 
 type KpiCardsProps = {
   kpi: KpiMetrics;
 };
 
 export function KpiCards({ kpi }: KpiCardsProps) {
+  const cards = [
+    { label: 'Вакансии', value: `${formatNumber(kpi.vacancies)} чел` },
+    { label: 'Средняя зарплата', value: formatRub(kpi.average_salary) },
+    { label: 'Медианная зарплата', value: formatRub(kpi.median_salary) },
+    { label: 'Конкуренция', value: `${formatNumber(kpi.competition_level)} чел/вак.` },
+    { label: 'Удалённая работа', value: formatPercent(kpi.remote_share) },
+  ];
+
   return (
-    <section>
+    <section className="section">
       <h2>KPI</h2>
       <div className="kpi-grid">
-        <article className="card"><strong>Vacancies</strong><p>{kpi.vacancies}</p></article>
-        <article className="card"><strong>Avg Salary</strong><p>{kpi.average_salary}</p></article>
-        <article className="card"><strong>Median Salary</strong><p>{kpi.median_salary}</p></article>
-        <article className="card"><strong>Competition</strong><p>{kpi.competition_level}</p></article>
-        <article className="card"><strong>Remote Share %</strong><p>{kpi.remote_share}</p></article>
+        {cards.map((card) => (
+          <article key={card.label} className="kpi-card">
+            <p className="kpi-label">{card.label}</p>
+            <p className="kpi-value">{card.value}</p>
+          </article>
+        ))}
       </div>
     </section>
   );
