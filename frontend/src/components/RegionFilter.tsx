@@ -15,7 +15,7 @@ export function RegionFilter({
 }: RegionFilterProps) {
   return (
     <section className="card section">
-      <h2>Region</h2>
+      <h2 className="section-title">Region Filter</h2>
       <select
         className="input"
         value={selectedRegionId ?? ''}

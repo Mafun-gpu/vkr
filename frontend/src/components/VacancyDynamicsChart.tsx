@@ -10,7 +10,7 @@ export function VacancyDynamicsChart({ points }: VacancyDynamicsChartProps) {
 
   return (
     <section className="card section">
-      <h2>Vacancy Dynamics</h2>
+      <h2 className="section-title">Vacancy Dynamics</h2>
       {points.map((point) => (
         <div key={point.period} className="chart-row">
           <span>{point.period}</span>

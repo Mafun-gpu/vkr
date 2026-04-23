@@ -58,7 +58,11 @@ export function DashboardPage() {
 
   return (
     <main className="container">
-      <h1 className="page-title">IT Market Dashboard</h1>
+      <header className="page-header">
+        <h1 className="page-title">Regional IT Market Analytics</h1>
+        <p className="page-subtitle">MVP dashboard for monitoring labor market trends</p>
+      </header>
+
       <RegionFilter
         regions={regions}
         selectedRegionId={selectedRegionId}
@@ -70,11 +74,13 @@ export function DashboardPage() {
       {(loadingRegions || loadingDashboard) && <p className="muted">Loading data...</p>}
 
       {dashboard && !loadingDashboard && (
-        <>
+        <section className="dashboard-grid">
           <KpiCards kpi={dashboard.kpi} />
-          <VacancyDynamicsChart points={dashboard.vacancy_dynamics} />
-          <TopSpecializationsTable items={dashboard.top_specializations} />
-        </>
+          <div className="analytics-grid">
+            <VacancyDynamicsChart points={dashboard.vacancy_dynamics} />
+            <TopSpecializationsTable items={dashboard.top_specializations} />
+          </div>
+        </section>
       )}
     </main>
   );

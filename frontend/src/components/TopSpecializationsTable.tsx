@@ -8,7 +8,7 @@ type TopSpecializationsTableProps = {
 export function TopSpecializationsTable({ items }: TopSpecializationsTableProps) {
   return (
     <section className="card section">
-      <h2>Top Specializations</h2>
+      <h2 className="section-title">Top Specializations</h2>
       <table className="table">
         <thead>
           <tr>
