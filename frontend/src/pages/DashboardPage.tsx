@@ -1,16 +1,81 @@
+import { useEffect, useState } from 'react';
+import { fetchDashboard } from '../api/dashboard';
+import { fetchRegions } from '../api/regions';
 import { KpiCards } from '../components/KpiCards';
-import { VacancyDynamicsChart } from '../components/VacancyDynamicsChart';
-import { TopSpecializationsTable } from '../components/TopSpecializationsTable';
 import { RegionFilter } from '../components/RegionFilter';
+import { TopSpecializationsTable } from '../components/TopSpecializationsTable';
+import { VacancyDynamicsChart } from '../components/VacancyDynamicsChart';
+import type { DashboardResponse } from '../types/dashboard';
+import type { Region } from '../types/region';
 
 export function DashboardPage() {
+  const [regions, setRegions] = useState<Region[]>([]);
+  const [selectedRegionId, setSelectedRegionId] = useState<number | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
+  const [loadingRegions, setLoadingRegions] = useState(true);
+  const [loadingDashboard, setLoadingDashboard] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadRegions() {
+      try {
+        setLoadingRegions(true);
+        const data = await fetchRegions();
+        setRegions(data);
+        if (data.length > 0) {
+          setSelectedRegionId(data[0].id);
+        }
+      } catch (requestError) {
+        setError(requestError instanceof Error ? requestError.message : 'Failed to load regions');
+      } finally {
+        setLoadingRegions(false);
+      }
+    }
+
+    loadRegions();
+  }, []);
+
+  useEffect(() => {
+    if (selectedRegionId === null) {
+      return;
+    }
+
+    async function loadDashboard() {
+      try {
+        setLoadingDashboard(true);
+        setError(null);
+        const data = await fetchDashboard(selectedRegionId);
+        setDashboard(data);
+      } catch (requestError) {
+        setError(requestError instanceof Error ? requestError.message : 'Failed to load dashboard');
+      } finally {
+        setLoadingDashboard(false);
+      }
+    }
+
+    loadDashboard();
+  }, [selectedRegionId]);
+
   return (
     <main className="container">
       <h1>IT Market Dashboard (MVP)</h1>
-      <RegionFilter />
-      <KpiCards />
-      <VacancyDynamicsChart />
-      <TopSpecializationsTable />
+      <RegionFilter
+        regions={regions}
+        selectedRegionId={selectedRegionId}
+        disabled={loadingRegions || loadingDashboard}
+        onSelect={setSelectedRegionId}
+      />
+
+      {error && <p className="error">Error: {error}</p>}
+      {(loadingRegions || loadingDashboard) && <p>Loading data...</p>}
+
+      {dashboard && !loadingDashboard && (
+        <>
+          <KpiCards kpi={dashboard.kpi} />
+          <VacancyDynamicsChart points={dashboard.vacancy_dynamics} />
+          <TopSpecializationsTable items={dashboard.top_specializations} />
+        </>
+      )}
     </main>
   );
 }
